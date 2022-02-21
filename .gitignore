@@ -1,0 +1,10 @@
+Library
+Logs
+Packages
+Temp
+UserSettings
+.vsconfig
+Assembly-CSharp.csproj
+obj
+.vs/*
+BoxedBox.sln
