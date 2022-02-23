@@ -10,7 +10,14 @@ public class InputManagerScript : MonoBehaviour
     public InputField yInput;
     public InputField zInput;
 
-    public void getInput()
+    public Button addBox;
+    public Button addComponent;
+
+    public Button showUIButton;
+
+    public GameObject UIToHide;
+
+    public void getInputBox()
     {
         bool success = Int32.TryParse(xInput.text, out int x);
         success &= Int32.TryParse(yInput.text, out int y);
@@ -21,8 +28,34 @@ public class InputManagerScript : MonoBehaviour
             Debug.Log(y);
             Debug.Log(z);
         }
+        xInput.text = "";
+        yInput.text = "";
+        zInput.text = "";
     }
 
+    public void getInputCompartment()
+    {
+
+    }
+
+    public void setUI()
+    {
+        Animator anim = UIToHide.GetComponent<Animator>();
+        if (anim != null)
+        {
+            Debug.Log("HA!");
+            bool hide = anim.GetBool("Hide");
+            anim.SetBool("Hide", !hide);
+        }
+        if (showUIButton.GetComponentInChildren<Text>().text == "Nascondi interfaccia")
+        {
+            showUIButton.GetComponentInChildren<Text>().text = "Mostra interfaccia";
+        }
+        else
+        {
+            showUIButton.GetComponentInChildren<Text>().text = "Nascondi interfaccia";
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
