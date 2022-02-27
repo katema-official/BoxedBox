@@ -1012,6 +1012,7 @@ MonoBehaviour:
   UIToHide: {fileID: 1769604049}
   LineGO: {fileID: 5342375819310514416, guid: 3b1fa241904cb60449b32d73465541e3, type: 3}
   textGO: {fileID: 4049055013954203080, guid: 516c283e7b78dbc4c887b7ef75ba019c, type: 3}
+  isUIFocused: 0
 --- !u!1 &804374806
 GameObject:
   m_ObjectHideFlags: 0

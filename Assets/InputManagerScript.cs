@@ -77,7 +77,7 @@ public class InputManagerScript : MonoBehaviour
         GameObject go1 = Instantiate(textGO);
         TextMeshPro t = go1.GetComponent<TextMeshPro>();
         t.text = text;
-        t.fontSize = (14 * cube.transform.localScale.x) / textLen;
+        t.fontSize = (13 * cube.transform.localScale.x) / textLen;
         RectTransform rt = go1.GetComponent<RectTransform>();
         rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, x);
         rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, z);
@@ -85,20 +85,77 @@ public class InputManagerScript : MonoBehaviour
             cube.transform.position.y + cube.transform.localScale.y / 2 + 0.1f,
             cube.transform.position.z);
         go1.transform.Rotate(90f, 0, 0);
-        
         res[0] = go1;
-
-
 
         //on the bottom
         go1 = Instantiate(textGO);
         t = go1.GetComponent<TextMeshPro>();
         t.text = text;
+        t.fontSize = (13 * cube.transform.localScale.x) / textLen;
+        rt = go1.GetComponent<RectTransform>();
+        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, x);
+        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, z);
         go1.transform.localPosition = new Vector3(cube.transform.position.x,
             cube.transform.position.y - cube.transform.localScale.y / 2 - 0.1f,
             cube.transform.position.z);
         go1.transform.Rotate(-90f, 0, 0);
         res[1] = go1;
+
+
+        //on the left
+        go1 = Instantiate(textGO);
+        t = go1.GetComponent<TextMeshPro>();
+        t.text = text;
+        t.fontSize = (13 * cube.transform.localScale.z) / textLen;
+        rt = go1.GetComponent<RectTransform>();
+        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, z);
+        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, y);
+        go1.transform.localPosition = new Vector3(cube.transform.position.x - cube.transform.localScale.x / 2 - 0.1f,
+            cube.transform.position.y,
+            cube.transform.position.z);
+        go1.transform.Rotate(0, 90f, 0);
+        res[2] = go1;
+
+        //on the right
+        go1 = Instantiate(textGO);
+        t = go1.GetComponent<TextMeshPro>();
+        t.text = text;
+        t.fontSize = (13 * cube.transform.localScale.z) / textLen;
+        rt = go1.GetComponent<RectTransform>();
+        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, z);
+        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, y);
+        go1.transform.localPosition = new Vector3(cube.transform.position.x + cube.transform.localScale.x / 2 + 0.1f,
+            cube.transform.position.y,
+            cube.transform.position.z);
+        go1.transform.Rotate(0, -90f, 0);
+        res[3] = go1;
+
+        //on the front
+        go1 = Instantiate(textGO);
+        t = go1.GetComponent<TextMeshPro>();
+        t.text = text;
+        t.fontSize = (13 * cube.transform.localScale.x) / textLen;
+        rt = go1.GetComponent<RectTransform>();
+        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, x);
+        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, y);
+        go1.transform.localPosition = new Vector3(cube.transform.position.x,
+            cube.transform.position.y,
+            cube.transform.position.z + cube.transform.localScale.z/2 + 0.1f);
+        go1.transform.Rotate(0, 180f, 0);
+        res[4] = go1;
+
+        //behind
+        go1 = Instantiate(textGO);
+        t = go1.GetComponent<TextMeshPro>();
+        t.text = text;
+        t.fontSize = (13 * cube.transform.localScale.x) / textLen;
+        rt = go1.GetComponent<RectTransform>();
+        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, x);
+        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, y);
+        go1.transform.localPosition = new Vector3(cube.transform.position.x,
+            cube.transform.position.y,
+            cube.transform.position.z - cube.transform.localScale.z / 2 - 0.1f);
+        res[5] = go1;
 
         return res;
     }
@@ -226,6 +283,7 @@ public class InputManagerScript : MonoBehaviour
     }
 
 
+    public bool isUIFocused = false;
     private int inputSelected = 0;
     // Update is called once per frame
     void Update()
@@ -235,8 +293,14 @@ public class InputManagerScript : MonoBehaviour
 
         if(!nameInputField.isFocused && !xInput.isFocused && !yInput.isFocused && !zInput.isFocused)
         {
-            //Debug.Log("ere " + inputSelected);
+            isUIFocused = false;
+            Debug.Log("ere " + inputSelected);
             inputSelected++;
+        }
+        else
+        {
+            Debug.Log("aaaaaaaaa " + inputSelected--);
+            isUIFocused = true;
         }
     }
 }
