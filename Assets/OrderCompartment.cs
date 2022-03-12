@@ -10,7 +10,6 @@ public class OrderCompartment : MonoBehaviour
     //JUST A COPY OF THE DATA PRESENT IN INPUTMANAGERSCRIPT
     //lists to conserve the boxes and the text on top of them
     private LinkedList<GameObject> boxList = new LinkedList<GameObject>();
-    private LinkedList<GameObject[]> textList = new LinkedList<GameObject[]>();
 
     //list to conserve the x,y and z values of all compartments
     private LinkedList<int[]> compartmentList = new LinkedList<int[]>();
@@ -104,4 +103,8 @@ public class OrderCompartment : MonoBehaviour
 
     
 
+
+
+
+    //private LinkedList
 }

@@ -9,12 +9,14 @@ public class Compartment
     public int xWidth;
     public int yWidth;
     public int zWidth;
+    public int floorHeight;
 
-    public Compartment(int x, int y, int z)
+    public Compartment(int x, int y, int z, int floorHeight)
     {
         this.xWidth = x;
         this.yWidth = y;
         this.zWidth = z;
+        this.floorHeight = floorHeight;
     }
 
 }

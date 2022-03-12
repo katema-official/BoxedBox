@@ -31,7 +31,7 @@ public class InputManagerScript : MonoBehaviour
     private LinkedList<GameObject> boxList = new LinkedList<GameObject>();
 
     //list to conserve the x,y and z values of all compartments
-    private LinkedList<int[]> compartmentList = new LinkedList<int[]>();
+    private LinkedList<Compartment> compartmentList = new LinkedList<Compartment>();
 
     private int xSpawn = 0;
     public void getInputBox()
@@ -62,8 +62,6 @@ public class InputManagerScript : MonoBehaviour
         xInput.text = "";
         yInput.text = "";
         zInput.text = "";
-
-        //now we have to displace the name
     }
 
     private void createTextOnAllFaces(GameObject cube, string text, int xSpawn, int x, int y, int z)
@@ -132,6 +130,7 @@ public class InputManagerScript : MonoBehaviour
         success &= Int32.TryParse(yInput.text, out int y);
         success &= Int32.TryParse(zInput.text, out int z);
 
+
         if (success)
         {
             GameObject[] lines = new GameObject[12];
@@ -165,6 +164,9 @@ public class InputManagerScript : MonoBehaviour
             lr = lines[11].GetComponent<LineRenderer>();
             lr.SetPosition(0, new Vector3(x, yBase + 0, z));
             lr.SetPosition(1, new Vector3(x, yBase + y, z));
+
+            Compartment c = new Compartment(x, y, z, yBase);
+            compartmentList.AddLast(c);
 
             yBase += y;
         }
