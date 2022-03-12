@@ -29,7 +29,6 @@ public class InputManagerScript : MonoBehaviour
 
     //lists to conserve the boxes and the text on top of them
     private LinkedList<GameObject> boxList = new LinkedList<GameObject>();
-    private LinkedList<GameObject[]> textList = new LinkedList<GameObject[]>();
 
     //list to conserve the x,y and z values of all compartments
     private LinkedList<int[]> compartmentList = new LinkedList<int[]>();
@@ -51,13 +50,12 @@ public class InputManagerScript : MonoBehaviour
             
 
             //creation of the 3D text with its name
-            GameObject[] texts = createTextOnAllFaces(go, nameInputField.text, xSpawn, x, y, z);
+            createTextOnAllFaces(go, nameInputField.text, xSpawn, x, y, z);
 
             xSpawn += x / 2;
 
             //now add the data into the lists
             boxList.AddLast(go);
-            textList.AddLast(texts);
 
         }
         nameInputField.text = "";
@@ -68,96 +66,60 @@ public class InputManagerScript : MonoBehaviour
         //now we have to displace the name
     }
 
-    private GameObject[] createTextOnAllFaces(GameObject cube, string text, int xSpawn, int x, int y, int z)
+    private void createTextOnAllFaces(GameObject cube, string text, int xSpawn, int x, int y, int z)
     {
-        GameObject[] res = new GameObject[6];
         int textLen = text.Length;
 
         //on top
-        GameObject go1 = Instantiate(textGO);
+        GameObject go1 = cube.transform.GetChild(4).gameObject;
         TextMeshPro t = go1.GetComponent<TextMeshPro>();
         t.text = text;
-        t.fontSize = (13 * cube.transform.localScale.x) / textLen;
+        //t.fontSize = (13 * cube.transform.localScale.x) / textLen;
         RectTransform rt = go1.GetComponent<RectTransform>();
-        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, x);
-        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, z);
+        //rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, x);
+        //rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, z);
+        /*
         go1.transform.localPosition = new Vector3(cube.transform.position.x,
             cube.transform.position.y + cube.transform.localScale.y / 2 + 0.1f,
             cube.transform.position.z);
         go1.transform.Rotate(90f, 0, 0);
-        res[0] = go1;
+        */
 
         //on the bottom
-        go1 = Instantiate(textGO);
+        go1 = cube.transform.GetChild(5).gameObject;
         t = go1.GetComponent<TextMeshPro>();
         t.text = text;
-        t.fontSize = (13 * cube.transform.localScale.x) / textLen;
-        rt = go1.GetComponent<RectTransform>();
-        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, x);
-        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, z);
+        //t.fontSize = (13 * cube.transform.localScale.x) / textLen;
+        //rt = go1.GetComponent<RectTransform>();
+        //rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, x);
+        //rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, z);
+        /*
         go1.transform.localPosition = new Vector3(cube.transform.position.x,
             cube.transform.position.y - cube.transform.localScale.y / 2 - 0.1f,
             cube.transform.position.z);
         go1.transform.Rotate(-90f, 0, 0);
-        res[1] = go1;
+        */
 
 
         //on the left
-        go1 = Instantiate(textGO);
+        go1 = cube.transform.GetChild(2).gameObject;
         t = go1.GetComponent<TextMeshPro>();
         t.text = text;
-        t.fontSize = (13 * cube.transform.localScale.z) / textLen;
-        rt = go1.GetComponent<RectTransform>();
-        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, z);
-        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, y);
-        go1.transform.localPosition = new Vector3(cube.transform.position.x - cube.transform.localScale.x / 2 - 0.1f,
-            cube.transform.position.y,
-            cube.transform.position.z);
-        go1.transform.Rotate(0, 90f, 0);
-        res[2] = go1;
 
         //on the right
-        go1 = Instantiate(textGO);
+        go1 = cube.transform.GetChild(3).gameObject;
         t = go1.GetComponent<TextMeshPro>();
         t.text = text;
-        t.fontSize = (13 * cube.transform.localScale.z) / textLen;
-        rt = go1.GetComponent<RectTransform>();
-        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, z);
-        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, y);
-        go1.transform.localPosition = new Vector3(cube.transform.position.x + cube.transform.localScale.x / 2 + 0.1f,
-            cube.transform.position.y,
-            cube.transform.position.z);
-        go1.transform.Rotate(0, -90f, 0);
-        res[3] = go1;
 
         //on the front
-        go1 = Instantiate(textGO);
+        go1 = cube.transform.GetChild(0).gameObject;
         t = go1.GetComponent<TextMeshPro>();
         t.text = text;
-        t.fontSize = (13 * cube.transform.localScale.x) / textLen;
-        rt = go1.GetComponent<RectTransform>();
-        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, x);
-        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, y);
-        go1.transform.localPosition = new Vector3(cube.transform.position.x,
-            cube.transform.position.y,
-            cube.transform.position.z + cube.transform.localScale.z/2 + 0.1f);
-        go1.transform.Rotate(0, 180f, 0);
-        res[4] = go1;
 
         //behind
-        go1 = Instantiate(textGO);
+        go1 = cube.transform.GetChild(1).gameObject;
         t = go1.GetComponent<TextMeshPro>();
         t.text = text;
-        t.fontSize = (13 * cube.transform.localScale.x) / textLen;
-        rt = go1.GetComponent<RectTransform>();
-        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, x);
-        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, y);
-        go1.transform.localPosition = new Vector3(cube.transform.position.x,
-            cube.transform.position.y,
-            cube.transform.position.z - cube.transform.localScale.z / 2 - 0.1f);
-        res[5] = go1;
-
-        return res;
     }
 
 
@@ -284,7 +246,6 @@ public class InputManagerScript : MonoBehaviour
 
 
     public bool isUIFocused = false;
-    private int inputSelected = 0;
     // Update is called once per frame
     void Update()
     {
@@ -294,12 +255,9 @@ public class InputManagerScript : MonoBehaviour
         if(!nameInputField.isFocused && !xInput.isFocused && !yInput.isFocused && !zInput.isFocused)
         {
             isUIFocused = false;
-            Debug.Log("ere " + inputSelected);
-            inputSelected++;
         }
         else
         {
-            Debug.Log("aaaaaaaaa " + inputSelected--);
             isUIFocused = true;
         }
     }
