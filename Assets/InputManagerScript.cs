@@ -28,12 +28,12 @@ public class InputManagerScript : MonoBehaviour
 
 
     //lists to conserve the boxes and the text on top of them
-    private LinkedList<GameObject> boxList = new LinkedList<GameObject>();
+    public LinkedList<Box> boxList = new LinkedList<Box>();
 
     //list to conserve the x,y and z values of all compartments
-    private LinkedList<Compartment> compartmentList = new LinkedList<Compartment>();
+    public LinkedList<Compartment> compartmentList = new LinkedList<Compartment>();
 
-    private int xSpawn = 0;
+    private int zSpawn = 0;
     public void getInputBox()
     {
         EventSystem.current.SetSelectedGameObject(null);
@@ -42,20 +42,13 @@ public class InputManagerScript : MonoBehaviour
         success &= Int32.TryParse(zInput.text, out int z);
         if (success)
         {
-            //creation of the gameobject
-            GameObject go = Instantiate(boxGO);
-            xSpawn += x / 2;
-            go.transform.localScale = new Vector3(x, y, z);
-            go.transform.localPosition = new Vector3(xSpawn, -100, 0);
-            
-
-            //creation of the 3D text with its name
-            createTextOnAllFaces(go, nameInputField.text, xSpawn, x, y, z);
-
-            xSpawn += x / 2;
+            zSpawn += z / 2;
+            GameObject go = createBoxGameObject(x, y, z, 0, -100, zSpawn, nameInputField.text);
+            zSpawn += z / 2;
 
             //now add the data into the lists
-            boxList.AddLast(go);
+            Box b = new Box(x, y, z, nameInputField.text, go);
+            boxList.AddLast(b);
 
         }
         nameInputField.text = "";
@@ -64,7 +57,21 @@ public class InputManagerScript : MonoBehaviour
         zInput.text = "";
     }
 
-    private void createTextOnAllFaces(GameObject cube, string text, int xSpawn, int x, int y, int z)
+    public GameObject createBoxGameObject(int xWidth, int yWidth, int zWidth, int xSpawn, int ySpawn, int zSpawn, string text)
+    {
+        //creation of the gameobject
+        GameObject go = Instantiate(boxGO);
+
+        go.transform.localScale = new Vector3(xWidth, yWidth, zWidth);
+        go.transform.localPosition = new Vector3(0, -100, zSpawn);
+        
+        //creation of the 3D text with its name
+        createTextOnAllFaces(go, text, xWidth, yWidth, zWidth);
+
+        return go;
+    }
+
+    private void createTextOnAllFaces(GameObject cube, string text, int x, int y, int z)
     {
         int textLen = text.Length;
 
@@ -118,6 +125,18 @@ public class InputManagerScript : MonoBehaviour
         go1 = cube.transform.GetChild(1).gameObject;
         t = go1.GetComponent<TextMeshPro>();
         t.text = text;
+
+        go1 = cube.transform.GetChild(6).gameObject;
+        t = go1.GetComponent<TextMeshPro>();
+        t.text = x.ToString();
+
+        go1 = cube.transform.GetChild(7).gameObject;
+        t = go1.GetComponent<TextMeshPro>();
+        t.text = y.ToString();
+
+        go1 = cube.transform.GetChild(8).gameObject;
+        t = go1.GetComponent<TextMeshPro>();
+        t.text = z.ToString();
     }
 
 

@@ -11,12 +11,27 @@ public class Box
     public int zWidth;
     public string name;
 
-    public Box(int x, int y, int z, string name)
+    //associated gameobject
+    public GameObject go;
+
+    //effective 3D point in which the lower-left-behind point of the box is located
+    //(when the box is placed inside a compartment)
+    public int xPoint;
+    public int yPoint;
+    public int zPoint;
+
+    public Box(int x, int y, int z, string name, GameObject go)
     {
         this.xWidth = x;
         this.yWidth = y;
         this.zWidth = z;
         this.name = name;
+        this.go = go;
+
+        //initially, the box isn't positioned
+        xPoint = -1;
+        yPoint = -1;
+        zPoint = -1;
     }
 
 }

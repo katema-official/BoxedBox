@@ -9,10 +9,10 @@ public class OrderCompartment : MonoBehaviour
 
     //JUST A COPY OF THE DATA PRESENT IN INPUTMANAGERSCRIPT
     //lists to conserve the boxes and the text on top of them
-    private LinkedList<GameObject> boxList = new LinkedList<GameObject>();
+    private LinkedList<Box> boxList = new LinkedList<Box>();
 
     //list to conserve the x,y and z values of all compartments
-    private LinkedList<int[]> compartmentList = new LinkedList<int[]>();
+    private LinkedList<Compartment> compartmentList = new LinkedList<Compartment>();
     private int yBase;
 
     private GameObject inputManager;
@@ -25,19 +25,82 @@ public class OrderCompartment : MonoBehaviour
     //point this one.
     public void findBestOrderingForCompartment(int compartmentNumber)
     {
-        int[] compartmentSizes = compartmentList.ElementAt(compartmentNumber);
-        int[,,] compartment = new int[compartmentSizes[0], compartmentSizes[1], compartmentSizes[2]];
-        //it returns an array of integers array, where each array contains the coordinates
-        //for the lower-left-behind point of the corresponding box.
-        //Note that the 2D matrix returned will be long boxList.Count iif all the boxes fit
-        //in the compartment, otherwise the number of boxes will be < boxList.Count.
-        int[][] boxesCoordinates = new int[boxList.Count][];
-        for(int j = 0; j < boxesCoordinates.Length; j++)
-        {
-            boxesCoordinates[j] = null;
-        }
-        int[][] i = findDisplacement(compartmentNumber, compartment, new int[boxList.Count][], new LinkedList<GameObject>(boxList));
+        Compartment c = compartmentList.ElementAt(compartmentNumber);
+
+        LinkedList<Box> resultForCompartment;
+        LinkedList<Point> points = new LinkedList<Point>();
+        points.AddLast(new Point(0, 0, 0));
+        resultForCompartment = putBox(new LinkedList<Box>(), copyBoxList(boxList), c, points);
+
+
+
+        //int[][] i = findDisplacement(compartmentNumber, compartment, new int[boxList.Count][], new LinkedList<GameObject>(boxList));
     }
+
+
+    private LinkedList<Box> putBox(LinkedList<Box> placed, LinkedList<Box> toPlace, Compartment compartment, LinkedList<Point> availablePoints)
+    {
+
+
+        foreach(Point p in availablePoints)
+        {
+            foreach(Box initialBox in toPlace)
+            {
+                foreach(Box b in rotatedBox(initialBox))
+                {
+
+                }
+            }
+        }
+
+
+
+
+
+
+        //TODO: delete this
+        return null;
+    }
+
+
+
+
+    private Box[] rotatedBox(Box b)
+    {
+        Box[] result = new Box[3];
+        result[0] = b;
+
+        GameObject bbGO = Instantiate(b.go);
+        Box bb = new Box(b.xWidth, b.zWidth, b.yWidth, b.name, null);
+        result[1] = bb;
+
+        bbGO = Instantiate(b.go);
+        bb = new Box(b.yWidth, b.xWidth, b.zWidth, b.name, null);
+        result[2] = bb;
+
+        bbGO = Instantiate(b.go);
+        bb = new Box(b.yWidth, b.zWidth, b.xWidth, b.name, null);
+        result[3] = bb;
+
+        bbGO = Instantiate(b.go);
+        bb = new Box(b.zWidth, b.xWidth, b.yWidth, b.name, null);
+        result[4] = bb;
+
+        bbGO = Instantiate(b.go);
+        bb = new Box(b.zWidth, b.yWidth, b.xWidth, b.name, null);
+        result[5] = bb;
+
+        return null;
+    }
+
+
+
+
+
+
+
+
+
 
     //function that, given a compartment, a list of already placed boxes inside of it and a list
     //of boxes that still need to be placed, places another box recursively, until all the unplaced boxes
@@ -90,12 +153,31 @@ public class OrderCompartment : MonoBehaviour
 
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     void Start()
     {
         inputManager = GameObject.Find("InputManager");
+        boxList = inputManager.GetComponent<InputManagerScript>().boxList;
+        compartmentList = inputManager.GetComponent<InputManagerScript>().compartmentList;
+
     }
 
-    
+
     void Update()
     {
         
@@ -106,5 +188,18 @@ public class OrderCompartment : MonoBehaviour
 
 
 
-    //private LinkedList
+    private LinkedList<Box> copyBoxList(LinkedList<Box> lb)
+    {
+        LinkedList<Box> result = new LinkedList<Box>();
+        for(int i = 0; i < lb.Count; i++)
+        {
+            Box current = lb.ElementAt(i);
+            Box newBox = new Box(current.xWidth, current.yWidth, current.zWidth, current.name, current.go);
+            newBox.xPoint = current.xPoint;
+            newBox.yPoint = current.yPoint;
+            newBox.zPoint = current.zPoint;
+            result.AddLast(newBox);
+        }
+        return result;
+    }
 }
