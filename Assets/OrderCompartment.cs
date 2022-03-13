@@ -43,6 +43,7 @@ public class OrderCompartment : MonoBehaviour
 
     private LinkedList<Box> putBox(LinkedList<Box> placed, LinkedList<Box> toPlace, Compartment compartment, LinkedList<Point> availablePoints)
     {
+        Debug.LogFormat("{0}, {1}, {2}, {3}", placed.Count, toPlace.Count, compartment, availablePoints.Count);
 
         //for all available points (in which i can theoretically place a box)
         foreach(Point p in availablePoints)
@@ -81,7 +82,8 @@ public class OrderCompartment : MonoBehaviour
 
                     //2) notify that the point is no longer available
                     LinkedList<Point> newPoints = copyPointList(availablePoints);
-                    newPoints.Remove(p);
+                    removePointFromList(newPoints, p);
+                    //newPoints.Remove(p);
 
                     //3) add the new points
                     Point newP1 = new Point(p.x + b.xWidth, p.y, p.z);
@@ -97,12 +99,13 @@ public class OrderCompartment : MonoBehaviour
 
                     //5) subtract the box from the list of the ones to be still placed
                     LinkedList<Box> newToPlace = copyBoxList(toPlace);
-                    newToPlace.Remove(b);
+                    removeBoxFromList(newToPlace, b);
+                    //newToPlace.Remove(b);
 
                     //before the recursive call, let's call a coroutine that really displaces the boxes in the compartment
                     StartCoroutine(DisplaceBoxesInCompartment(newPlaced, compartment));
 
-                    return null;
+                    Debug.LogFormat("new: {0}, {1}, {2}, {3}", newPlaced.Count, newToPlace.Count, compartment, newPoints.Count);
                     //now we can call the function recursively
                     putBox(newPlaced, newToPlace, compartment, newPoints);
                 }
@@ -208,6 +211,44 @@ public class OrderCompartment : MonoBehaviour
         }
         return false;
     }
+
+
+
+
+
+    //UTILITY FUNCTIONS FOR DELETION FROM A LINKEDLIST
+    //POINTS
+    private Point getPointToRemove(LinkedList<Point> points, Point p)
+    {
+        foreach(Point t in points)
+        {
+            if (t.x == p.x && t.y == p.y && t.z == p.z) return t;
+        }
+        return null;
+    }
+
+    private void removePointFromList(LinkedList<Point> points, Point pToRemove)
+    {
+        Point p = getPointToRemove(points, pToRemove);
+        if (p != null) points.Remove(p);
+    }
+
+    //BOXES
+    private Box getBoxToRemove(LinkedList<Box> boxes, Box b)
+    {
+        foreach (Box t in boxes)
+        {
+            if (t.xWidth == b.xWidth && t.yWidth == b.yWidth && t.zWidth == b.zWidth && t.name == b.name) return t;
+        }
+        return null;
+    }
+
+    private void removeBoxFromList(LinkedList<Box> boxes, Box bToRemove)
+    {
+        Box b = getBoxToRemove(boxes, bToRemove);
+        if (b != null) boxes.Remove(b);
+    }
+
 
 
     //function that, given a compartment, a list of already placed boxes inside of it and a list
