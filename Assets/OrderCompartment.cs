@@ -182,10 +182,23 @@ public class OrderCompartment : MonoBehaviour
         return false;
     }
 
+    //SOURCE: https://stackoverflow.com/questions/20925818/algorithm-to-check-if-two-boxes-overlap
+    private bool isOverlapping1D(int min1, int max1, int min2, int max2)
+    {
+        Debug.Log(max1 > min2 && max2 > min1);
+        return (max1 > min2 && max2 > min1);
+    }
+
     //function used to check if the first box, already placed in the compartment, would overlap
     //with the second if one if it had to be placed in the point possibleNewPoint
     private bool doBoxesOverlap(Box b1, Box b2, Point possibleNewPoint)
     {
+        return (isOverlapping1D(b1.xPoint, b1.xPoint + b1.xWidth, possibleNewPoint.x, possibleNewPoint.x + b2.xWidth)) && 
+            (isOverlapping1D(b1.yPoint, b1.yPoint + b1.yWidth, possibleNewPoint.y, possibleNewPoint.y + b2.yWidth)) && 
+            (isOverlapping1D(b1.zPoint, b1.zPoint + b1.zWidth, possibleNewPoint.z, possibleNewPoint.z + b2.zWidth));
+
+
+        /*
         for(int i = possibleNewPoint.x; i < possibleNewPoint.x + b2.xWidth; i++)
         {
             for (int j = possibleNewPoint.y; j < possibleNewPoint.y + b2.yWidth; j++)
@@ -199,7 +212,9 @@ public class OrderCompartment : MonoBehaviour
                 }
             }
         }
-        return false;
+        */
+
+        //return false;
     }
 
     //function used to chech if one of the boxes of the first list (representing the boxes already placed
