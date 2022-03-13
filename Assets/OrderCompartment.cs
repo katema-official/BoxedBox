@@ -40,6 +40,7 @@ public class OrderCompartment : MonoBehaviour
         //int[][] i = findDisplacement(compartmentNumber, compartment, new int[boxList.Count][], new LinkedList<GameObject>(boxList));
     }
 
+    private int executions = 0;
 
     private LinkedList<Box> putBox(LinkedList<Box> placed, LinkedList<Box> toPlace, Compartment compartment, LinkedList<Point> availablePoints, int depth)
     {
@@ -57,6 +58,7 @@ public class OrderCompartment : MonoBehaviour
                 //for each possible rotation of the box
                 foreach(Box b in rotatedBox(initialBox))
                 {
+                    Debug.Log("executions = " + executions++);
                     Debug.LogFormat("depth = {4}, ongoing: {0}, {1}, {2}, {3}", placed.Count, toPlace.Count, compartment, availablePoints.Count, depth);
                     //in this point, this box, rotated like this, goes out of bounds in respect to the compartment?
                     bool outOfCompartment = isBoxOutsideOfCompartment(p, b, compartment);
@@ -143,7 +145,7 @@ public class OrderCompartment : MonoBehaviour
 
         }
 
-        yield return new WaitForSeconds(0.01f);
+        yield return new WaitForSeconds(0.5f);
 
     }
 
@@ -185,7 +187,6 @@ public class OrderCompartment : MonoBehaviour
     //SOURCE: https://stackoverflow.com/questions/20925818/algorithm-to-check-if-two-boxes-overlap
     private bool isOverlapping1D(int min1, int max1, int min2, int max2)
     {
-        Debug.Log(max1 > min2 && max2 > min1);
         return (max1 > min2 && max2 > min1);
     }
 
@@ -196,25 +197,6 @@ public class OrderCompartment : MonoBehaviour
         return (isOverlapping1D(b1.xPoint, b1.xPoint + b1.xWidth, possibleNewPoint.x, possibleNewPoint.x + b2.xWidth)) && 
             (isOverlapping1D(b1.yPoint, b1.yPoint + b1.yWidth, possibleNewPoint.y, possibleNewPoint.y + b2.yWidth)) && 
             (isOverlapping1D(b1.zPoint, b1.zPoint + b1.zWidth, possibleNewPoint.z, possibleNewPoint.z + b2.zWidth));
-
-
-        /*
-        for(int i = possibleNewPoint.x; i < possibleNewPoint.x + b2.xWidth; i++)
-        {
-            for (int j = possibleNewPoint.y; j < possibleNewPoint.y + b2.yWidth; j++)
-            {
-                for (int k = possibleNewPoint.z; k < possibleNewPoint.z + b2.zWidth; k++)
-                {
-                    if((i >= b1.xPoint && i < b1.xPoint + b1.xWidth) && (j >= b1.yPoint && j < b1.yPoint + b1.yWidth) && (k >= b1.zPoint && k < b1.zPoint + b1.zWidth))
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-        */
-
-        //return false;
     }
 
     //function used to chech if one of the boxes of the first list (representing the boxes already placed
