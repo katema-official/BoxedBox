@@ -33,7 +33,7 @@ public class OrderCompartment : MonoBehaviour
         LinkedList<Box> resultForCompartment;
         LinkedList<Point> points = new LinkedList<Point>();
         points.AddLast(new Point(0, 0, 0));
-        resultForCompartment = putBox(new LinkedList<Box>(), copyBoxList(boxList), c, points);
+        resultForCompartment = putBox(new LinkedList<Box>(), copyBoxList(boxList), c, points, 0);
 
 
 
@@ -41,21 +41,23 @@ public class OrderCompartment : MonoBehaviour
     }
 
 
-    private LinkedList<Box> putBox(LinkedList<Box> placed, LinkedList<Box> toPlace, Compartment compartment, LinkedList<Point> availablePoints)
+    private LinkedList<Box> putBox(LinkedList<Box> placed, LinkedList<Box> toPlace, Compartment compartment, LinkedList<Point> availablePoints, int depth)
     {
-        Debug.LogFormat("{0}, {1}, {2}, {3}", placed.Count, toPlace.Count, compartment, availablePoints.Count);
+        //if there are no more boxes to palce, simply return the list of the already placed ones
+        if (toPlace.Count == 0) return placed;
+        Debug.LogFormat("depth = {4}, cur: {0}, {1}, {2}, {3}", placed.Count, toPlace.Count, compartment, availablePoints.Count, depth);
 
         //for all available points (in which i can theoretically place a box)
-        foreach(Point p in availablePoints)
+        foreach (Point p in availablePoints)
         {
             //for each box i have to place
             foreach(Box initialBox in toPlace)
             {
+                //Debug.LogFormat("Depth = {0}, toPlace.Count = {1}", depth, toPlace.Count);
                 //for each possible rotation of the box
                 foreach(Box b in rotatedBox(initialBox))
                 {
-                    Debug.Log("Inside");
-
+                    Debug.LogFormat("depth = {4}, ongoing: {0}, {1}, {2}, {3}", placed.Count, toPlace.Count, compartment, availablePoints.Count, depth);
                     //in this point, this box, rotated like this, goes out of bounds in respect to the compartment?
                     bool outOfCompartment = isBoxOutsideOfCompartment(p, b, compartment);
                     //if so, skip this iteration. You can't put that there.
@@ -75,39 +77,41 @@ public class OrderCompartment : MonoBehaviour
                     //-add this box to the list of the already placed one
                     //-subtract it from the list of the ones to be still placed
 
+                    //first of all, make a copy of the data structures
+                    LinkedList<Point> newPoints = copyPointList(availablePoints);
+                    LinkedList<Box> newPlaced = copyBoxList(placed);
+                    LinkedList<Box> newToPlace = copyBoxList(toPlace);
+
                     //1) place the box
-                    b.xPoint = p.x;
-                    b.yPoint = p.y;
-                    b.zPoint = p.z;
+                    Box bb = getBoxInList(newToPlace, b);
+                    bb.xPoint = p.x;
+                    bb.yPoint = p.y;
+                    bb.zPoint = p.z;
 
                     //2) notify that the point is no longer available
-                    LinkedList<Point> newPoints = copyPointList(availablePoints);
                     removePointFromList(newPoints, p);
-                    //newPoints.Remove(p);
 
                     //3) add the new points
-                    Point newP1 = new Point(p.x + b.xWidth, p.y, p.z);
-                    Point newP2 = new Point(p.x, p.y + b.yWidth, p.z);
-                    Point newP3 = new Point(p.x, p.y, p.z + b.zWidth);
+                    Point newP1 = new Point(p.x + bb.xWidth, p.y, p.z);
+                    Point newP2 = new Point(p.x, p.y + bb.yWidth, p.z);
+                    Point newP3 = new Point(p.x, p.y, p.z + bb.zWidth);
                     newPoints.AddLast(newP1);
                     newPoints.AddLast(newP2);
                     newPoints.AddLast(newP3);
 
                     //4) add the box to the list of placed ones
-                    LinkedList<Box> newPlaced = copyBoxList(placed);
-                    newPlaced.AddLast(b);
+                    newPlaced.AddLast(bb);
 
                     //5) subtract the box from the list of the ones to be still placed
-                    LinkedList<Box> newToPlace = copyBoxList(toPlace);
-                    removeBoxFromList(newToPlace, b);
-                    //newToPlace.Remove(b);
+                    removeBoxFromList(newToPlace, bb);
 
                     //before the recursive call, let's call a coroutine that really displaces the boxes in the compartment
                     StartCoroutine(DisplaceBoxesInCompartment(newPlaced, compartment));
 
-                    Debug.LogFormat("new: {0}, {1}, {2}, {3}", newPlaced.Count, newToPlace.Count, compartment, newPoints.Count);
+                    Debug.LogFormat("depth = {4}, new: {0}, {1}, {2}, {3}", newPlaced.Count, newToPlace.Count, compartment, newPoints.Count, depth);
+                    if (depth > 10) return null;
                     //now we can call the function recursively
-                    putBox(newPlaced, newToPlace, compartment, newPoints);
+                    putBox(newPlaced, newToPlace, compartment, newPoints, depth + 1);
                 }
             }
         }
@@ -139,10 +143,7 @@ public class OrderCompartment : MonoBehaviour
 
         }
 
-        Debug.Log("Corourine almost finished");
-
-        yield return new WaitForSeconds(1f);
-        Debug.Log("Corourine finished");
+        yield return new WaitForSeconds(0.01f);
 
     }
 
@@ -218,7 +219,7 @@ public class OrderCompartment : MonoBehaviour
 
     //UTILITY FUNCTIONS FOR DELETION FROM A LINKEDLIST
     //POINTS
-    private Point getPointToRemove(LinkedList<Point> points, Point p)
+    private Point getPointInList(LinkedList<Point> points, Point p)
     {
         foreach(Point t in points)
         {
@@ -229,25 +230,29 @@ public class OrderCompartment : MonoBehaviour
 
     private void removePointFromList(LinkedList<Point> points, Point pToRemove)
     {
-        Point p = getPointToRemove(points, pToRemove);
+        Point p = getPointInList(points, pToRemove);
         if (p != null) points.Remove(p);
     }
 
     //BOXES
-    private Box getBoxToRemove(LinkedList<Box> boxes, Box b)
+    private Box getBoxInList(LinkedList<Box> boxes, Box b)
     {
         foreach (Box t in boxes)
         {
-            if (t.xWidth == b.xWidth && t.yWidth == b.yWidth && t.zWidth == b.zWidth && t.name == b.name) return t;
+            if (t.name == b.name) return t;
         }
         return null;
     }
 
     private void removeBoxFromList(LinkedList<Box> boxes, Box bToRemove)
     {
-        Box b = getBoxToRemove(boxes, bToRemove);
+        Box b = getBoxInList(boxes, bToRemove);
         if (b != null) boxes.Remove(b);
     }
+
+
+
+
 
 
 
