@@ -43,7 +43,7 @@ public class InputManagerScript : MonoBehaviour
         if (success)
         {
             zSpawn += z / 2;
-            GameObject go = createBoxGameObject(x, y, z, 0, -100, zSpawn, nameInputField.text);
+            GameObject go = createBoxGameObject(x, y, z, 300, -150, zSpawn, nameInputField.text);
             zSpawn += z / 2;
 
             //now add the data into the lists
@@ -63,7 +63,7 @@ public class InputManagerScript : MonoBehaviour
         GameObject go = Instantiate(boxGO);
 
         go.transform.localScale = new Vector3(xWidth, yWidth, zWidth);
-        go.transform.localPosition = new Vector3(0, -100, zSpawn);
+        go.transform.localPosition = new Vector3(xSpawn, ySpawn, zSpawn);
         
         //creation of the 3D text with its name
         createTextOnAllFaces(go, text, xWidth, yWidth, zWidth);
@@ -75,6 +75,16 @@ public class InputManagerScript : MonoBehaviour
     {
         int textLen = text.Length;
 
+        GameObject go;
+        TextMeshPro t;
+        for (int i = 0; i < 6; i++)
+        {
+            go = cube.transform.GetChild(i).gameObject;
+            t = go.GetComponent<TextMeshPro>();
+            t.text = text;
+        }
+
+        /*
         //on top
         GameObject go1 = cube.transform.GetChild(4).gameObject;
         TextMeshPro t = go1.GetComponent<TextMeshPro>();
@@ -83,12 +93,12 @@ public class InputManagerScript : MonoBehaviour
         RectTransform rt = go1.GetComponent<RectTransform>();
         //rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, x);
         //rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, z);
-        /*
+        
         go1.transform.localPosition = new Vector3(cube.transform.position.x,
             cube.transform.position.y + cube.transform.localScale.y / 2 + 0.1f,
             cube.transform.position.z);
         go1.transform.Rotate(90f, 0, 0);
-        */
+        
 
         //on the bottom
         go1 = cube.transform.GetChild(5).gameObject;
@@ -98,12 +108,12 @@ public class InputManagerScript : MonoBehaviour
         //rt = go1.GetComponent<RectTransform>();
         //rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, x);
         //rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, z);
-        /*
+        
         go1.transform.localPosition = new Vector3(cube.transform.position.x,
             cube.transform.position.y - cube.transform.localScale.y / 2 - 0.1f,
             cube.transform.position.z);
         go1.transform.Rotate(-90f, 0, 0);
-        */
+        
 
 
         //on the left
@@ -125,17 +135,18 @@ public class InputManagerScript : MonoBehaviour
         go1 = cube.transform.GetChild(1).gameObject;
         t = go1.GetComponent<TextMeshPro>();
         t.text = text;
+        */
 
-        go1 = cube.transform.GetChild(6).gameObject;
-        t = go1.GetComponent<TextMeshPro>();
+        go = cube.transform.GetChild(6).gameObject;
+        t = go.GetComponent<TextMeshPro>();
         t.text = x.ToString();
 
-        go1 = cube.transform.GetChild(7).gameObject;
-        t = go1.GetComponent<TextMeshPro>();
+        go = cube.transform.GetChild(7).gameObject;
+        t = go.GetComponent<TextMeshPro>();
         t.text = y.ToString();
 
-        go1 = cube.transform.GetChild(8).gameObject;
-        t = go1.GetComponent<TextMeshPro>();
+        go = cube.transform.GetChild(8).gameObject;
+        t = go.GetComponent<TextMeshPro>();
         t.text = z.ToString();
     }
 
