@@ -102,6 +102,7 @@ public class OrderCompartment : MonoBehaviour
                     //before the recursive call, let's call a coroutine that really displaces the boxes in the compartment
                     StartCoroutine(DisplaceBoxesInCompartment(newPlaced, compartment));
 
+                    return null;
                     //now we can call the function recursively
                     putBox(newPlaced, newToPlace, compartment, newPoints);
                 }
@@ -135,9 +136,11 @@ public class OrderCompartment : MonoBehaviour
 
         }
 
-        Debug.Log("Corourine finished");
+        Debug.Log("Corourine almost finished");
 
         yield return new WaitForSeconds(1f);
+        Debug.Log("Corourine finished");
+
     }
 
 
